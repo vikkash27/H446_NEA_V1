@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Tasks</h1>
+  <div class="btn-group" role="group" aria-label="Task views">
+    <button type="button" class="btn btn-primary" id="calendar-view">Calendar View</button>
+    <button type="button" class="btn btn-primary" id="list-view">List View</button>
+  </div>
+  <div class="mt-3">
+    <button type="button" class="btn btn-primary" id="create-task-btn" data-toggle="modal" data-target="#create-task-modal">Create Task</button>
+  </div>
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Due Date</th>
+        <th scope="col">Priority</th>
+        <th scope="col">Finished?</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+        <tr>
+          <th scope="row">{{ task.id }}</th>
+          <td>{{ task.name }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.due_date }}</td>
+          <td>{{ task.priority }}</td>
+          <td>{{ task.finished }}</td>
+          <td>
+            <a href="#" class="btn btn-sm btn-primary">Edit</a>
+            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <!-- Create Task Modal -->
+  <div class="modal fade" id="create-task-modal" tabindex="-1" role="dialog" aria-labelledby="create-task-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="create-task-modal-title">Create Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="create-task-form">
+            <div class="form-group">
+              <label for="task-name">Name</label>
+              <input type="text" class="form-control" id="task-name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="task-description">Description</label>
+              <textarea class="form-control" id="task-description" name="description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="task-due-date">Due Date</label>
+              <input type="date" class="form-control" id="task-due-date" name="due_date" required>
+            </div>
+            <div class="form-group">
+              <label for="task-priority">Priority</label>
+              <select class="form-control" id="task-priority" name="priority" required>
+                <option value="" disabled selected>Select priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="task-finished">Finished?</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="task-finished" name="finished">
+                <label class="form-check-label" for="task-finished">
+                  Yes
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" form="create-task-form" class="btn btn-primary">Create Task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+  // Handle form submission
+  $('#create-task-form').submit(function(event) {
+    event.preventDefault(); // Prevent form from submitting
+    $.ajax({
+      url: '/tasks/create',
+      method: 'POST',
+      data: $(this).serialize(),
+      success: function(response) {
+        // Reload the page to show the newly created task
+        location.reload();
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  });
+});
+  </script>
+{% endblock %}
+

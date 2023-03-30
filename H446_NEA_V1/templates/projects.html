@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="margin: 0 auto; width: 70%;">
+
+    <button onclick="showForm()">Create</button>
+    <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Lead</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for project in projects %}
+          <tr>
+              <td>{{ project.name }}</td>
+              <td>{{ project.description }}</td>
+              <td>{{ project.due_date.strftime('%Y-%m-%d') }}</td>
+              <td>{{ project.priority }}</td>
+              <td>{{ project.status }}</td>
+              <td>{{ project.user.name }}</td>
+              <td><button onclick="viewMore('{{ project.id }}', '{{ project.name }}', '{{ project.description }}', '{{ project.due_date }}', '{{ project.priority }}', '{{ project.status }}')">View More</button></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+      
+</div>
+<div id="form" style="display:none; position: fixed; z-index: 1; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 50%;">
+        <span style="color: #888; float: right; font-size: 28px; font-weight: bold; cursor: pointer;" onclick="hideMore()">&times;</span>
+        <h2>Project Details</h2>
+        <p>Name: <span id="name"></span></p>
+        <p>Description: <span id="description"></span></p>
+        <p>Due Date: <span id="due_date"></span></p>
+        <p>Priority: <span id="priority"></span></p>
+        <p>Status: <span id="status"></span></p>
+        <input type="hidden" id="project_id" name="project_id" value="">
+      </div>
+      
+</div>
+
+  
+<div id="project_form" style="display:none; position: fixed; z-index: 1; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div style="background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 50%;">
+        <span style="color: #888; float: right; font-size: 28px; font-weight: bold; cursor: pointer;" onclick="hideForm()">&times;</span>
+        <form method="POST" action="{{ url_for('projects') }}">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="due_date">Due Date</label>
+                <input type="date" class="form-control" id="due_date" name="due_date" required>
+            </div>
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select class="form-control" id="priority" name="priority" required>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status" required>
+                    <option value="not started">Not Started</option>
+                    <option value="in progress">In Progress</option>
+                    <option value="complete">Complete</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Project</button>
+        </form>
+      </div>
+</div>
+  
+<script>
+    function showForm() {
+        document.getElementById("project_form").style.display = "block";
+    }
+
+    function hideForm() {
+        document.getElementById("project_form").style.display = "none";
+    }
+
+    function viewMore(id, name, description, due_date, priority, status) {
+  var form = document.getElementById("form");
+  var name_field = document.getElementById("name");
+  var description_field = document.getElementById("description");
+  var due_date_field = document.getElementById("due_date");
+  var priority_field = document.getElementById("priority");
+  var status_field = document.getElementById("status");
+
+  name_field.innerText = name;
+  description_field.innerText = description;
+  due_date_field.innerText = due_date;
+  priority_field.innerText = priority;
+  status_field.innerText = status;
+
+  form.style.display = "block";
+}
+
+
+    function hideMore() {
+        document.getElementById("form").style.display = "none";
+    }
+</script>
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px;
+  }
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+</style>
+<style>
+    /* Add extra spacing between labels and input fields */
+    label {
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    /* Increase the height of the description field */
+    #description {
+      height: 70px;
+      resize: vertical;
+    }
+  </style>
+  
+
+{% endblock %}

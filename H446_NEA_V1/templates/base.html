@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dashboard.css') }}">
+    {% block link %}{% endblock %}
+</head>
+<body>
+    <!-- Top bar -->
+    <div class="top-bar">
+        <div class="user-info">
+            <div class="top-bar__username">Welcome {{ user.username }}</div>
+            <div class="top-bar__icon dropdown">
+                <div class="icon">🔔</div>
+                <div class="dropdown-menu">
+                  <a href="#">Notification 1</a>
+                  <a href="#">Notification 2</a>
+                  <a href="#">Notification 3</a>
+                </div>
+              </div>
+              
+              <div class="top-bar__icon dropdown">
+                <div class="icon">👤</div>
+                <div class="dropdown-menu">
+                  <a href="{{ url_for('profile') }}">Profile</a>
+                  <a href="{{ url_for('settings') }}">Settings</a>
+                  <a href="#" onclick="confirmLogout()">Logout</a></li>
+                </div>
+              </div>
+            </div>         
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li class="sidebar__item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li class="sidebar__item"><a href="{{ url_for('projects') }}">Projects</a></li>
+            <li class="sidebar__item"><a href="{{ url_for('chat') }}">Chat</a></li>
+            <li class="sidebar__item"><a href="{{ url_for('tasks') }}">Tasks</a></li>
+            <li class="sidebar__item"><a href="{{ url_for('resources') }}">Resources</a></li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="container", >
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+    function confirmLogout() {
+        if (confirm("Are you sure you want to logout?")) 
+        {
+            window.location.href = "/logout";
+        }
+    }
+ 
+
+
+    </script>
+</body>
+</html>
